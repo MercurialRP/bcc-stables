@@ -1,4 +1,5 @@
 local VORPcore = exports.vorp_core:GetCore()
+local FeatherMenu =  exports['feather-menu'].initiate()
 -- Shop Prompts
 local OpenShops
 local OpenCall
@@ -1071,6 +1072,53 @@ function HorseStats()
     print('XP Level 2:', level2, 'Trick: Rear-Up / left-ctrl + spacebar')
     print('Xp Level 3:', level3, 'Trick: Skid-Stop / left-ctrl')
     print('XP Level 4:', level4, 'Trick: Dance and Drift / spacebar')
+    -- Menu Horse Stats
+        MyMenu = FeatherMenu:RegisterMenu('feather:character:menu', {
+            top = '3%',
+            left = '3%',
+            ['720width'] = '400px',
+            ['1080width'] = '500px',
+            ['2kwidth'] = '600px',
+            ['4kwidth'] = '800px',
+            style = {},
+            contentslot = {
+                style = {
+                    ['height'] = '300px',
+                    ['min-height'] = '300px'
+                }
+            },
+            draggable = true,
+        }, {
+            opened = function()
+            end,
+            closed = function()
+            end,
+            topage = function(data)
+            end
+        })
+            -- Header
+            HomePage = MyMenu:RegisterPage('HomePage')
+            HomePage:RegisterElement('header', {
+                value = 'Horse Information',
+                slot = "header",
+                style = {}
+            })
+            -- Subheaders
+            HomePage:RegisterElement('subheader', {
+                value = "Horse Name: "..HorseName,
+                slot = "header",
+                style = {}
+            })
+            HomePage:RegisterElement('subheader', {
+                value = "Current Bonding Level: "..currentLevel,
+                slot = "header",
+                style = {}
+            })
+            HomePage:RegisterElement('subheader', {
+                value = "Current XP: "..currentXp,
+                slot = "header",
+                style = {}
+            })
 end
 
 -- Wild Horse Taming
@@ -1733,6 +1781,7 @@ end
 RegisterCommand(Config.commands.horseStats, function()
     if MyHorse then
         HorseStats()
+        MyMenu:Open({startupPage = HomePage})
     else
         VORPcore.NotifyRightTip(_U('noSelectedHorse'), 4000)
     end
